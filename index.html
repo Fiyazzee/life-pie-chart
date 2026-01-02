@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Life Time Calculator</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      text-align: center;
+      margin: 0;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 20px;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    input {
+      padding: 8px;
+      margin: 5px;
+      width: 120px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2980b9;
+    }
+
+    canvas {
+      max-width: 450px;
+      margin: 30px auto;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Life Time Calculator</h1>
+  <p>Enter values and see how your life is spent</p>
+</header>
+
+<section>
+  <h3>Enter Your Data</h3>
+
+  <input type="number" id="age" placeholder="Total Years" value="100"><br>
+  <input type="number" id="sleep" placeholder="Sleep hrs/day" value="8"><br>
+  <input type="number" id="school" placeholder="School years" value="12"><br>
+  <input type="number" id="college" placeholder="College years" value="5"><br>
+  <input type="number" id="work" placeholder="Work years" value="35"><br>
+  <input type="number" id="travel" placeholder="Travel hrs/day" value="2"><br><br>
+
+  <button onclick="calculate()">Calculate</button>
+</section>
+
+<section>
+  <canvas id="lifeChart"></canvas>
+</section>
+
+<script>
+  let chart;
+
+  function calculate() {
+    const totalYears = Number(age.value);
+    const sleepHrs = Number(sleep.value);
+    const schoolYrs = Number(school.value);
+    const collegeYrs = Number(college.value);
+    const workYrs = Number(work.value);
+    const travelHrs = Number(travel.value);
+
+    const totalHours = totalYears * 365 * 24;
+
+    const sleepHours = totalYears * 365 * sleepHrs;
+    const schoolHours = schoolYrs * 200 * 6;
+    const collegeHours = collegeYrs * 200 * 6;
+    const workHours = workYrs * 250 * 8;
+    const travelHours = (schoolYrs + collegeYrs + workYrs) * 250 * travelHrs;
+
+    const usedHours = sleepHours + schoolHours + collegeHours + workHours + travelHours;
+    const freeHours = totalHours - usedHours;
+
+    const data = [
+      sleepHours,
+      workHours,
+      travelHours,
+      schoolHours,
+      collegeHours,
+      freeHours
+    ];
+
+    if (chart) chart.destroy();
+
+    chart = new Chart(lifeChart, {
+      type: 'pie',
+      data: {
+        labels: [
+          'Sleep',
+          'Work',
+          'Travel',
+          'School',
+          'College',
+          'Free Time'
+        ],
+        datasets: [{
+          data: data,
+          backgroundColor: [
+            '#4CAF50',
+            '#2196F3',
+            '#FF9800',
+            '#9C27B0',
+            '#03A9F4',
+            '#F1C40F'
+          ]
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
