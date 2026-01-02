@@ -3,47 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <title>Life Time Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      text-align: center;
       margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #eef1f5;
+      color: #333;
     }
 
     header {
-      background: #2c3e50;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
       color: white;
-      padding: 20px;
+      padding: 30px 15px;
+      text-align: center;
     }
 
-    section {
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin-top: 8px;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
       padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 20px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
     }
 
     input {
-      padding: 8px;
-      margin: 5px;
-      width: 120px;
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
     }
 
     button {
-      padding: 10px 20px;
-      background: #3498db;
-      color: white;
+      width: 100%;
+      margin-top: 25px;
+      padding: 12px;
+      font-size: 16px;
       border: none;
+      border-radius: 6px;
+      background: #2a5298;
+      color: white;
       cursor: pointer;
     }
 
     button:hover {
-      background: #2980b9;
+      background: #1e3c72;
     }
 
     canvas {
-      max-width: 450px;
-      margin: 30px auto;
+      max-width: 100%;
+      margin-top: 20px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      background: #1e3c72;
+      color: white;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -51,36 +111,58 @@
 
 <header>
   <h1>Life Time Calculator</h1>
-  <p>Enter values and see how your life is spent</p>
+  <p>Understand how your life time is distributed</p>
 </header>
 
-<section>
-  <h3>Enter Your Data</h3>
+<div class="container">
 
-  <input type="number" id="age" placeholder="Total Years" value="100"><br>
-  <input type="number" id="sleep" placeholder="Sleep hrs/day" value="8"><br>
-  <input type="number" id="school" placeholder="School years" value="12"><br>
-  <input type="number" id="college" placeholder="College years" value="5"><br>
-  <input type="number" id="work" placeholder="Work years" value="35"><br>
-  <input type="number" id="travel" placeholder="Travel hrs/day" value="2"><br><br>
+  <!-- Input Section -->
+  <div class="card">
+    <h2>Enter Your Details</h2>
 
-  <button onclick="calculate()">Calculate</button>
-</section>
+    <label>Total Life Years</label>
+    <input type="number" id="age" value="100">
 
-<section>
-  <canvas id="lifeChart"></canvas>
-</section>
+    <label>Sleep (hours per day)</label>
+    <input type="number" id="sleep" value="8">
+
+    <label>School Years</label>
+    <input type="number" id="school" value="12">
+
+    <label>College Years</label>
+    <input type="number" id="college" value="5">
+
+    <label>Work Years</label>
+    <input type="number" id="work" value="35">
+
+    <label>Travel (hours per day)</label>
+    <input type="number" id="travel" value="2">
+
+    <button onclick="calculate()">Calculate Life Chart</button>
+  </div>
+
+  <!-- Chart Section -->
+  <div class="card">
+    <h2>Life Time Distribution</h2>
+    <canvas id="lifeChart"></canvas>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Life Time Calculator | Free Educational Tool
+</footer>
 
 <script>
   let chart;
 
   function calculate() {
-    const totalYears = Number(age.value);
-    const sleepHrs = Number(sleep.value);
-    const schoolYrs = Number(school.value);
-    const collegeYrs = Number(college.value);
-    const workYrs = Number(work.value);
-    const travelHrs = Number(travel.value);
+    const totalYears = +age.value;
+    const sleepHrs = +sleep.value;
+    const schoolYrs = +school.value;
+    const collegeYrs = +college.value;
+    const workYrs = +work.value;
+    const travelHrs = +travel.value;
 
     const totalHours = totalYears * 365 * 24;
 
@@ -90,33 +172,17 @@
     const workHours = workYrs * 250 * 8;
     const travelHours = (schoolYrs + collegeYrs + workYrs) * 250 * travelHrs;
 
-    const usedHours = sleepHours + schoolHours + collegeHours + workHours + travelHours;
-    const freeHours = totalHours - usedHours;
-
-    const data = [
-      sleepHours,
-      workHours,
-      travelHours,
-      schoolHours,
-      collegeHours,
-      freeHours
-    ];
+    const used = sleepHours + schoolHours + collegeHours + workHours + travelHours;
+    const free = Math.max(totalHours - used, 0);
 
     if (chart) chart.destroy();
 
     chart = new Chart(lifeChart, {
       type: 'pie',
       data: {
-        labels: [
-          'Sleep',
-          'Work',
-          'Travel',
-          'School',
-          'College',
-          'Free Time'
-        ],
+        labels: ['Sleep', 'Work', 'Travel', 'School', 'College', 'Free Time'],
         datasets: [{
-          data: data,
+          data: [sleepHours, workHours, travelHours, schoolHours, collegeHours, free],
           backgroundColor: [
             '#4CAF50',
             '#2196F3',
